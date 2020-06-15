@@ -40,6 +40,5 @@ netdata:
   service.running:
     - enable: True
     - reload: True
-
-
-
+  watch:
+    - file: /etc/netdata/netdata.conf
