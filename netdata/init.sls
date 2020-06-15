@@ -39,5 +39,7 @@ netdata_backend:
 netdata:
   service.running:
     - enable: True
+    - reload: True
+
 
 
