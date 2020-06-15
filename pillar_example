@@ -1,2 +1,3 @@
-netdata:
-  registry: http://{{ salt['grains.get']('fqdn') }}:19999
+netdata_config:
+  grafana_instance: ip_address_of_grafana 
+  grafana_port: port_of_grafana 

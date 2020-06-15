@@ -1,48 +1,43 @@
-{% if salt['grains.get']('netdata') != 'installed' %}
 
 netdata_packages:
   pkg.installed:
     - pkgs:
-      - zlib1g-dev 
-      - uuid-dev
-      - libmnl-dev
-      - gcc 
-      - make 
-      - git 
-      - autoconf 
-      - autoconf-archive 
-      - autogen 
-      - automake 
-      - pkg-config 
       - curl
-      - libuv1-dev
-netdata_git:
-  git.latest:
-    - name: https://github.com/firehol/netdata.git
-    
-    - target: /tmp/netdata
+      - gnupg
+      - apt-transport-https
+      - debian-archive-keyring
+
+netdata_repo:
+  pkgrepo.managed:
+    - name: deb https://packagecloud.io/netdata/netdata/debian/ {{ grains['oscodename'] }} main
+    - key_url: https://packagecloud.io/netdata/netdata/gpgkey
+    - require_in: 
+      - netdata_install
 
 netdata_install:
-  cmd.run:
-    - name: /tmp/netdata/netdata-installer.sh --dont-start-it --dont-wait
-    - cwd: /tmp/netdata
-  grains.present:
-    - name: netdata
-    - value: installed
-/etc/netdata/netdata.conf:
-  file.managed:
-    - source:
+  pkg.installed:
+    - pkgs:
+      - netdata
+#/etc/netdata/netdata.conf:
+#  file.managed:
+#    - source:
+#      - salt://netdata-formula/netdata/files/netdata.conf
+#    - user: root
+#    - group: root
+#    - mode: 644
+netdata_bind_all:
+  file.replace:
+    - name: /etc/netdata/netdata.conf
+    - pattern: "bind to = localhost"
+    - repl: "bind to = *"
+netdata_backend:
+  file:
+    - append
+    - name: /etc/netdata/netdata.conf
+    - sources:
       - salt://netdata-formula/netdata/files/netdata.conf
-    - user: root
-    - group: root
-    - mode: 644
-
 netdata:
   service.running:
     - enable: True
 
-/tmp/netdata:
-  file.absent:
-    - order: last
-{% endif %}
 
