@@ -2,6 +2,6 @@
 
 Install and configure netdata on a machine using SaltStack
 
-Only tested on Scientific Linux and CentOS 6 but may work on others (SysV init)
+This installs netdata through the debian repo.  You can configure netdata specific in files/netdata.conf
 
 https://github.com/firehol/netdata
